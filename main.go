@@ -66,12 +66,16 @@ func main() {
 	var results Results
 	json.Unmarshal(body, &results)
 
-	// Build the Table
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Shop", "Listing", "Price"})
-	for r := range results.Matches {
-		table.Append([]string{results.Matches[r].Shop, results.Matches[r].Listing, results.Matches[r].Price})
-	}
+	// Build the Table. If no matches, return message
+	if results.MatchCount < 1 {
+		fmt.Println("No matches found...")
+	} else {
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"Shop", "Listing", "Price"})
+		for r := range results.Matches {
+			table.Append([]string{results.Matches[r].Shop, results.Matches[r].Listing, results.Matches[r].Price})
+		}
 
-	table.Render()
+		table.Render()
+	}
 }
